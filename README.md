@@ -4,7 +4,7 @@ _premaxwell_ is my C++11 rewrite of the [toy ray tracer][1] originally written i
 
 Ray tracing is exciting as it follows nature, and one can simulate any non-wave phenomenon of light precisely, including soft shadows and caustics. On the other hand, the codes are often recursive and challenging to execute in parallel, and, above all, we can never bounce photons as many times as nature does. We cannot have as many photons to begin with.
 
-Therefore, despite NVIDIA's RTX GPUs, I do not really believe in advances in this direction and appreciate real-time approximations which still capture a lot, but billions of times faster. The techniques like [shadow mapping and ray casting for volumetric light](https://github.com/aabbtree77/twinpeekz2) are closer to what the old masters did, and they present a much smarter way to model light.
+Therefore, despite NVIDIA's RTX GPUs, I do not really believe in advances in this direction and appreciate real-time approximations which still capture a lot, but billions of times faster. The techniques like [shadow mapping and ray marching for volumetric light](https://github.com/aabbtree77/twinpeekz2) are closer to what the old masters did, and they present a much smarter way to model light.
 
 This code, however, is about ray tracing. It serves only two purposes: 
 
