@@ -115,5 +115,5 @@ A quality package management that handles FFI to C/C++ with all the dependencies
 1. [https://github.com/python/pyperformance/tree/main/pyperformance/data-files/benchmarks/bm_raytrace][1]
 2. [https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection][2]
 
-[1]: https://github.com/python/pyperformance/blob/main/pyperformance/benchmarks/bm_raytrace.py
+[1]: https://github.com/python/pyperformance/tree/main/pyperformance/data-files/benchmarks/bm_raytrace
 [2]: https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
