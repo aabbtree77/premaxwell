@@ -2,9 +2,9 @@
 
 _premaxwell_ is my C++11 rewrite of the [toy ray tracer][1] originally written in 2008 (Python 2) by the Garnock-Jones brothers. The ray tracer has no refractions. For more complete ray tracers an interested reader is referred to ["smallpt" related codes](https://github.com/seifeddinedridi/smallvpt), Peter Shirley's et al. Ray Tracing Weekend Series, or even Physically Based Rendering: From Theory To Implementation by Matt Pharr, Wenzel Jakob, and Greg Humphreys.
 
-Ray tracing is exciting as it follows nature, and one can simulate any non-wave phenomenon of light precisely, including soft shadows and caustics. On the other hand, the codes are often recursive and challenging to execute in parallel, and, above all, we can never bounce photons as many times as nature does. We cannot have as many photons to begin with.
+Ray tracing is exciting because it follows nature, allowing one to produce soft shadows and caustics based on first principles, without having to introduce a different specialized GPU-reliant algorithm every time we want to model a certain phenomenon of light. On the other hand, we cannot bounce as many photons as nature does, and even when we can, the light effects will often be too tiny for artistic purposes.
 
-Therefore, despite NVIDIA's RTX GPUs, I do not really believe in advances in this direction and appreciate real-time approximations which still capture a lot, but billions of times faster. The techniques like [shadow mapping and ray marching for volumetric light](https://github.com/aabbtree77/twinpeekz2) are closer to what the old masters did, and they present a much smarter way to model light.
+Real time techniques like [shadow mapping and ray marching for volumetric light](https://github.com/aabbtree77/twinpeekz2) are closer to what the old masters did, and they present a much smarter way to model light.
 
 This code, however, is about ray tracing. It serves only two purposes: 
 
@@ -78,7 +78,7 @@ The execution time reduces 5x with no significant decrease of the quality.
 
 ## C++ vs. PyPy
 
-In some ancient times I would run [Psyco](https://en.wikipedia.org/wiki/Psyco) which would speed up CPython roughly 3x, and in turn the C++ code would speed up the Psyco code further by 3x, reaching the overall 10x improvement. In the year 2021 the matters look different with PyPy:
+In some ancient times I would run [Psyco](https://en.wikipedia.org/wiki/Psyco) which would speed up CPython roughly 3x, and in turn the C++ code would speed up the Psyco code further by 3x, reaching the overall 10x improvement. In the year 2021 the matters already looked different with PyPy:
 
 CPython: __92.1s.__, 64.388 MB. 
 
