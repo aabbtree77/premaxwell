@@ -1,23 +1,16 @@
+> Dedicated to John D. Hunter (1968 - 2012).
+
 ## Introduction
 
-_premaxwell_ is my C++11 rewrite of the [toy ray tracer][1] originally written in 2008 (Python 2) by the Garnock-Jones brothers. The ray tracer has no refractions. For more complete ray tracers an interested reader is referred to ["smallpt" related codes](https://github.com/seifeddinedridi/smallvpt), Peter Shirley's et al. Ray Tracing Weekend Series, or even Physically Based Rendering: From Theory To Implementation by Matt Pharr, Wenzel Jakob, and Greg Humphreys.
-
-Ray tracing is exciting because it follows nature, allowing one to produce soft shadows and caustics based on first principles, without having to introduce a different specialized GPU-reliant algorithm every time we want to model a certain phenomenon of light. On the other hand, we cannot bounce as many photons as nature does, and even when we can, the light effects will often be too tiny for artistic purposes.
-
-Real time techniques like [shadow mapping and ray marching for volumetric light](https://github.com/aabbtree77/twinpeekz2) are closer to what the old masters did, and they present a much smarter way to model light.
+_premaxwell_ is my C++11 rewrite of the [toy ray tracer][1] originally written in 2008 (Python 2) by the Garnock-Jones brothers. The ray tracer has no refractions. For more complete ray tracers an interested reader is referred to ["smallpt" related codes](https://github.com/seifeddinedridi/smallvpt) or Peter Shirley et al. Ray Tracing Weekend Series. Ultimately, real time techniques like [shadow mapping and ray marching for volumetric light](https://github.com/aabbtree77/twinpeekz2) are closer to what the old masters did, and they will always be million times faster.
 
 This code, however, is about ray tracing. It serves only two purposes: 
 
-- Presents my experiments with a minimal viable subset of C++11. This is subjective, I am mostly gaining some DX here. The code includes minimal uses of classes and polymorphism, but no compile-time gymnastics.
+- Presents my experiments with a minimal viable subset of C++11.
 
-- Testing C++11 with gcc -O3 against PyPy (a jitted Python). The C++ code is not manually optimized, uses "fat pointers", the STL and lambdas, which I thought would lead to rapid code development with decent readability and performance (not really).
+- Tests C++11 with gcc -O3 against PyPy (a jitted Python).
 
 ## Translation
-
-The Python program creates heterogeneous containers at run-time. In order to emulate this type of programming, 
-I have applied the STL vector of the C++11 shared pointers to the Base class from which all the geometric 
-primitives are derived. This technique is known as "late binding" which uses virtual class functions and the public 
-inheritance-based polymorphism. 
 
 The ray-tracing recursions have been replaced here with a two-stage process: (i) path generation, 
 and (ii) the propagation of colors. See the ray tracing result below, and compare it to the incorrect one [here.](https://pyperformance.readthedocs.io/)
@@ -35,7 +28,7 @@ and (ii) the propagation of colors. See the ray tracing result below, and compar
 
 ## Setup Details
 
-In order to compile the C++ code successfully, one must use the gcc-4.6.0 compiler (or a more recent version supporting C++11).
+Use the gcc-4.6.0 compiler (or a more recent version supporting C++11).
 Simply run
 
 ```console
@@ -43,7 +36,7 @@ make
 ./premaxwell
 ```
 
-It will create the image "out_cpp.ppm".
+It will create the image file out_cpp.ppm.
 
 [To install PyPy](https://stackoverflow.com/questions/53266913/how-to-create-a-conda-environment-that-uses-pypy):
 
@@ -86,29 +79,17 @@ C++11 (g++ -O3): __6.00s.__, 9.424 MB.
 
 PyPy: __2.22s__, 114.224 MB.
 
-Note: 1920x1080 resolution, intersection depth = 20, positive epsilon test. It is obvious that my C++ code could be made to run faster, the results merely indicate that this is not a trivial task. Also notice that PyPy speeds up CPython nearly 50x times in this case, so Python is not generally slow, it is that we are stuck with CPython and the C/C++ wrapping paradigm.
+Note: 1920x1080 resolution, intersection depth = 20, positive epsilon test. It is obvious that my C++ code could be made to run faster, the results merely indicate that this is not a trivial task. PyPy speeds up CPython nearly 50x times in this case, so Python is not generally slow, it is that we are stuck with CPython and its ecosystem.
 
-C++11 introduced shared_ptr, auto, range-based for loop, lambda, also std::thread which I did not exploit here. These new features, coupled with a judiciously used STL and POD would make a solid viable C++ subset. However, notice that this is not enough to get a superb performance exemplified with PyPy here. I managed to rewrite the Python code manually in C++ and make it run slower than the jitted Python 3 code by PyPy. I suspect this has something to do with the way I transformed recursion into a two stage iterative process, but in general the basic viable subset of C++ stated above does not guarantee anything unless you have a lot of time to further improve it. The PyPy program consumes 10x more RAM, but this is hardly a problem.
+## Conclusions
 
-## JIT is Irrelevant
+* I have managed to rewrite the Python code manually in C++, and make it run slower than the Python3 code jitted by PyPy. The C++ code per se does not guarantee anything unless you have a lot of time to optimize it. 
 
-JIT and smart compilers are less important than the community with its libraries that solve real problems. PyPy and Julia remain pale in comparison to CPython which has attracted a lot of different people (not only compiler gurus):
+* Loops are totally not a problem for Python, but the PyPy program consumes 10x more RAM. Also, the JIT technology is not relevant to simulations and numerical computing, sadly. PyPy and Julia remain pale in comparison to CPython which has Matplotlib, Anaconda, PyTorch, Keras, SageMath... The latter matter more than PyPy or even Python.
 
-- Travis Oliphant and Numpy, Anaconda, especially the latter.
+## Dedication
 
-- John D. Hunter (R.I.P.) and Matplotlib.
-
-- PyTorch, Keras... Lots of unique ML models with some industrial effort there.
-
-- William Stein and SageMath. 20KLOC just the graph library alone, Khovanov homology etc.
-
-- ...
-
-I would say the lib that made all the difference was **Matplotlib**. It was the primary reason Torch and Lua was abandoned in favor of PyTorch around 2010. I have also used Scilab and saw how advanced it was with PACA Grid in France 2012, yet when I had to publish the results, Scilab was lacking and my [plots](https://hal.archives-ouvertes.fr/hal-00723427) were made in Python.
-
-I am pretty sure there will be a lot of code acrobatics to be found in Julia/C++/Rust eco systems, peta scale simulations what not, but to displace CPython one needs parity with Anaconda, Matplotlib, and PyTorch, at least. If you are not displacing CPython, you are only promoting n+1.
-
-A quality package management that handles FFI to C/C++ with all the dependencies makes a huge difference. Notice that "pip3" is not "conda", it won't install correctly CUDA, Matplotlib with its GUI backends, and PyPy. I am able to run some modern convnets on my old GTX760 ("error: compute capability 3.0 not supported anymore") [without much hassle](https://github.com/aabbtree77/MNIST-0.17) only due to Anaconda.
+The lib that made all the difference for Python was **Matplotlib**, R.I.P. John D. Hunter (1968 - 2012). Matplotlib was the primary reason Torch and Lua were abandoned in favor of PyTorch around 2010. I had used Scilab and saw how advanced it was with PACA Grid in France 2012, yet when I had to publish my results, Scilab was lacking and [the plots](https://hal.archives-ouvertes.fr/hal-00723427) were made in Python with Matplotlib.
 
 ## References
 
